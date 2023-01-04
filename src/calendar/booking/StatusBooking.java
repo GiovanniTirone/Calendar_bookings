@@ -31,13 +31,6 @@ public class StatusBooking {
         this.rangeTimeOfBooking = Optional.empty();
     }
 
-    public StatusBooking (boolean success, InfoBookingEnum info,Booking booking){
-        this.success = success;
-        this.info = info;
-        this.successfulBooking = Optional.of(booking);
-        this.newTimeToPropose = Optional.empty();
-        this.rangeTimeOfBooking = Optional.empty();
-    }
 
     public StatusBooking (boolean success, InfoBookingEnum info,Booking booking,RangeTimeOfTable rangeTimeOfTable){
         this.success = success;

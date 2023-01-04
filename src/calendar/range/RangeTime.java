@@ -1,9 +1,6 @@
 package calendar.range;
 
-
-
 import calendar.booking.Booking;
-
 import java.lang.reflect.Constructor;
 import java.time.LocalTime;
 import java.util.TreeSet;

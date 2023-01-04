@@ -86,9 +86,11 @@ public class Table {
         RangeTimeOfTable newRange = new RangeTimeOfTable(newBooking);
         openingRange.addRangeTime(newRange);
         setPreviusRanges_TO_CHECK(newRange);
-        //todo passare TUTTO l'opening range
+        // todo passare TUTTO l'opening range
         return new StatusBooking(true,InfoBookingEnum.NO_INFO,newBooking,newRange);
     }
+
+    private Optional<RangeTimeOfTable> getNextRangeTimeWithBooking ( )
 
     private Optional<StatusBooking> checkCompatibilityWithNextBookings (RangeTimeOfTable targetRange,LocalTime time,long bookingRange) {
         Optional<RangeTimeOfTable> nextRange = Optional.ofNullable(openingRange.higher(targetRange));
@@ -97,7 +99,7 @@ public class Table {
                 LocalTime nextBookingTime = nextRange.get().getStartBookingTime().get();
                 if (time.plusMinutes(bookingRange).isAfter(nextBookingTime)) {
                     return Optional.of(new StatusBooking(false, InfoBookingEnum.PROPOSE_NEW_TIME));
-                    //todo add time to propose
+                    // todo add time to propose
                 }
             }
             nextRange = Optional.ofNullable(openingRange.higher(nextRange.get()));

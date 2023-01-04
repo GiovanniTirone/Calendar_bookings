@@ -1,6 +1,7 @@
 package tests;
 
-import calendar.newcalendar.OpeningCalendar;
+import calendar.newcalendar.OpeningCalendarAllDays;
+import calendar.newcalendar.OpeningCalendarDay;
 import restaurant.Client;
 import restaurant.Restaurant;
 
@@ -10,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TestOpeningCalendar2 {
+public class TestOpeningCalendarDay2 {
 
     public static void main(String[] args) throws Exception {
 
-        OpeningCalendar calendar = OpeningCalendar.getInstance();
+        OpeningCalendarAllDays calendar = OpeningCalendarAllDays.getInstance();
         Restaurant restaurant = Restaurant.getInstance();
 
         calendar.activateIntervalFromDate(LocalDate.now(),2);
@@ -26,9 +27,9 @@ public class TestOpeningCalendar2 {
         calendar.bookTable(createClientsList(4),getDateFromNow(1),LocalTime.of(13,05),80);
         calendar.bookTable(createClientsList(4),getDateFromNow(1),LocalTime.of(13,20),65);
 
-        calendar.printActivateDays();
+
         calendar.printDetailsOfAllDays();
-        calendar.printRangesOfDateTimeFormatted(getDateFromNow(1),LocalTime.of(11,00));
+        calendar.printRangesOfDate(getDateFromNow(1));
       //  calendar.printAllRanges();
         restaurant.getTavoli().get(2).printRanges();
     }

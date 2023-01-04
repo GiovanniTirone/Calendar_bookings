@@ -6,15 +6,12 @@ import calendar.booking.StatusBooking;
 import calendar.range.RangeTime;
 import calendar.table.RangeTimeOfTable;
 import calendar.table.Table;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import restaurant.Client;
 import utility.Comparators;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
+
+import java.util.*;
 
 public class RangeTimeOfAllTables extends RangeTime<TreeMap<Table, RangeTimeOfTable>> {
 
@@ -53,11 +50,14 @@ public class RangeTimeOfAllTables extends RangeTime<TreeMap<Table, RangeTimeOfTa
 
     protected StatusBooking bookTable (List<Client> clientsList, LocalDate date, LocalTime time, long bookingRange) throws Exception {
         StatusBooking status = new StatusBooking(false, InfoBookingEnum.IMPOSSIBLE);
+        TreeSet<StatusBooking> statusWithNewTimeToPropose = new TreeSet<>(Comparator.comparing(s -> s.getNewTimeToPropose().get()));
         for(Table table : tablesOriginalRangesMap.keySet()){
             if(table.getNumeroPostiTavolo() < clientsList.size()) continue;
             status = table.bookTable(clientsList,  date,  time,  bookingRange);
             if(status.isSuccess()) return status;
+            statusWithNewTimeToPropose.add(status);
         }
+        if(!statusWithNewTimeToPropose.isEmpty()) return statusWithNewTimeToPropose.first();
         return status;
     }
 

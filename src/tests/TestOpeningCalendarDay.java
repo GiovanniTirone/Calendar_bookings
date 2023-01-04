@@ -1,6 +1,6 @@
 package tests;
 
-import calendar.newcalendar.OpeningCalendar;
+import calendar.newcalendar.OpeningCalendarDay;
 import restaurant.Client;
 import restaurant.Restaurant;
 import java.time.LocalDate;
@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TestOpeningCalendar {
-
+public class TestOpeningCalendarDay {
+    /*
     public static void main(String[] args) throws Exception {
 
-        OpeningCalendar calendar = OpeningCalendar.getInstance();
+        OpeningCalendarDay calendar = OpeningCalendarDay.getInstance();
         Restaurant restaurant = Restaurant.getInstance();
 
         calendar.activateIntervalFromDate(LocalDate.now(),2);
@@ -51,6 +51,6 @@ public class TestOpeningCalendar {
         return clientsList;
     }
 
-
+    */
 
 }
