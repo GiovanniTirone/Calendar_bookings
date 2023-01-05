@@ -50,7 +50,14 @@ public class RangeTimeOfAllTables extends RangeTime<TreeMap<Table, RangeTimeOfTa
 
     protected StatusBooking bookTable (List<Client> clientsList, LocalDate date, LocalTime time, long bookingRange) throws Exception {
         StatusBooking status = new StatusBooking(false, InfoBookingEnum.IMPOSSIBLE);
-        TreeSet<StatusBooking> statusWithNewTimeToPropose = new TreeSet<>(Comparator.comparing(s -> s.getNewTimeToPropose().get()));
+        TreeSet<StatusBooking> statusWithNewTimeToPropose = new TreeSet<>((s1,s2) -> {
+            if(s1.getNewTimeToPropose().isPresent() && s2.getNewTimeToPropose().isPresent()){
+                return s1.getNewTimeToPropose().get().compareTo(s2.getNewTimeToPropose().get());
+            }
+            else{
+                return 0;
+            }
+        });
         for(Table table : tablesOriginalRangesMap.keySet()){
             if(table.getNumeroPostiTavolo() < clientsList.size()) continue;
             status = table.bookTable(clientsList,  date,  time,  bookingRange);

@@ -1,7 +1,6 @@
 package tests;
 
 import calendar.newcalendar.OpeningCalendarAllDays;
-import calendar.newcalendar.OpeningCalendarDay;
 import restaurant.Client;
 import restaurant.Restaurant;
 
@@ -31,7 +30,7 @@ public class TestOpeningCalendarDay2 {
         calendar.printDetailsOfAllDays();
         calendar.printRangesOfDate(getDateFromNow(1));
       //  calendar.printAllRanges();
-        restaurant.getTavoli().get(2).printRanges();
+        restaurant.getTables().get(2).printRanges();
     }
 
     private static String [] names = {"Liam" ,	"Olivia" , "Noah" ,	"Emma", "Oliver",	"Charlotte","Elijah"	,"Amelia"

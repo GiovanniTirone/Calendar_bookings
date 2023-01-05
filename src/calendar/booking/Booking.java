@@ -81,6 +81,10 @@ public class Booking {
         this.rangeTime = rangeTime;
     }
 
+    public LocalTime getEndTime () {
+        return this.dateTime.toLocalTime().plusMinutes(this.rangeTime);
+    }
+
 
     public String getDetails () {
         return  "Booking details: " +

@@ -8,6 +8,7 @@ import restaurant.Client;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -30,9 +31,9 @@ public class Table {
      * Inserito metodo costruttore Parametrizzato con :
      * @param numeroPostiTavolo
      * @param numeroTavolo
-     * @param isFree
+     *
      */
-    public Table(int numeroPostiTavolo, int numeroTavolo, boolean isFree){
+    public Table(int numeroPostiTavolo, int numeroTavolo){
         this.numeroPostiTavolo = numeroPostiTavolo;
         this.numeroTavolo = numeroTavolo;
     }
@@ -71,12 +72,14 @@ public class Table {
         Optional <RangeTimeOfTable> targetRangeOpt = openingRange.getRangeByTime(time);
         if(targetRangeOpt.isEmpty()) return new StatusBooking(false, InfoBookingEnum.TIME_OUT_OF_OPENING_RANGE);
         RangeTimeOfTable targetRange = targetRangeOpt.get();
-        if(targetRange.getStatusTable() == StatusTableEnum.BOOKED) return new StatusBooking(false,InfoBookingEnum.IMPOSSIBLE);
+     //   if(targetRange.getStatusTable() == StatusTableEnum.BOOKED) return new StatusBooking(false,InfoBookingEnum.IMPOSSIBLE);
         if(clientsList.size()>numeroPostiTavolo) return new StatusBooking(false,InfoBookingEnum.PEOPLE_OUT_OF_MAX_TABLE_SIZE);
 
         Optional<StatusBooking> statusBookingOpt;
 
-        if(targetRange.getStatusTable() == StatusTableEnum.TO_CHECK) {
+        switch()
+        if(targetRange.getStatusTable() == StatusTableEnum.TO_CHECK ||
+                (targetRange.getStatusTable() == StatusTableEnum.BOOKED && time.isBefore(targetRange.getInfoTable().getStartBookingTime().get()))) {
           statusBookingOpt = checkCompatibilityWithNextBookings(targetRange,time,bookingRange);
           if(statusBookingOpt.isPresent())
               return statusBookingOpt.get();
@@ -90,24 +93,51 @@ public class Table {
         return new StatusBooking(true,InfoBookingEnum.NO_INFO,newBooking,newRange);
     }
 
-    private Optional<RangeTimeOfTable> getNextRangeTimeWithBooking ( )
-
-    private Optional<StatusBooking> checkCompatibilityWithNextBookings (RangeTimeOfTable targetRange,LocalTime time,long bookingRange) {
-        Optional<RangeTimeOfTable> nextRange = Optional.ofNullable(openingRange.higher(targetRange));
+    private Optional<RangeTimeOfTable> getCeilingRangeTimeWithBooking(RangeTimeOfTable startRange){
+        if(startRange.getBooking().isPresent()) return Optional.of(startRange);
+        Optional<RangeTimeOfTable> nextRange = Optional.ofNullable(openingRange.higher(startRange));
         while (nextRange.isPresent()) {
-            if(nextRange.get().getStartBookingTime().isPresent()) {
-                LocalTime nextBookingTime = nextRange.get().getStartBookingTime().get();
-                if (time.plusMinutes(bookingRange).isAfter(nextBookingTime)) {
-                    return Optional.of(new StatusBooking(false, InfoBookingEnum.PROPOSE_NEW_TIME));
-                    // todo add time to propose
-                }
-            }
+            if (nextRange.get().getStartBookingTime().isPresent()) return nextRange;
             nextRange = Optional.ofNullable(openingRange.higher(nextRange.get()));
         }
+        return Optional.empty();
+    }
 
-        if (time.plusMinutes(bookingRange).isAfter(openingRange.getClosureTime())) {
-            return Optional.of(new StatusBooking(false, InfoBookingEnum.TIME_OUT_OF_OPENING_RANGE));
+    private Optional<RangeTimeOfTable> getLowerRangeTimeWithBooking(RangeTimeOfTable startRange){
+        Optional<RangeTimeOfTable> previusRange = Optional.ofNullable(openingRange.lower(startRange));
+        while (previusRange.isPresent()) {
+            if (previusRange.get().getStartBookingTime().isPresent()) return previusRange;
+            previusRange = Optional.ofNullable(openingRange.lower(previusRange.get()));
         }
+        return Optional.empty();
+    }
+
+    private Optional<StatusBooking> checkCompatibilityWithNextBookings (RangeTimeOfTable targetRange,LocalTime time,long bookingRange) {
+        Optional<RangeTimeOfTable> nextRangeWithBookings = getCeilingRangeTimeWithBooking(targetRange);
+        LocalTime newBookingEndTime = time.plusMinutes(bookingRange);
+        if(nextRangeWithBookings.isPresent()){
+            LocalTime nextBookingStartTime = nextRangeWithBookings.get().getStartBookingTime().get();
+            if(newBookingEndTime.isBefore(nextBookingStartTime) || newBookingEndTime.equals(nextBookingStartTime)) return Optional.empty();
+            LocalTime timeToPropose = time.minusMinutes(ChronoUnit.MINUTES.between(nextBookingStartTime,newBookingEndTime));
+            Optional<RangeTimeOfTable> previusRangeWithBookings = getLowerRangeTimeWithBooking(targetRange);
+            if(previusRangeWithBookings.isPresent()){
+                LocalTime prevBookingEndTime = previusRangeWithBookings.get().getBooking().get().getEndTime();
+                if(timeToPropose.isBefore(prevBookingEndTime))
+                    return Optional.of(new StatusBooking(false,InfoBookingEnum.IMPOSSIBLE));
+                else
+                    return Optional.of(new StatusBooking(false,InfoBookingEnum.PROPOSE_NEW_TIME,timeToPropose));
+            }
+            else{
+                if(timeToPropose.isBefore(openingRange.getOpeningTime()))
+                    return Optional.of(new StatusBooking(false, InfoBookingEnum.TIME_OUT_OF_OPENING_RANGE));
+                else
+                    return Optional.of(new StatusBooking(false,InfoBookingEnum.PROPOSE_NEW_TIME,timeToPropose));
+            }
+        }
+
+        if (newBookingEndTime.isAfter(openingRange.getClosureTime()))
+            return Optional.of(new StatusBooking(false, InfoBookingEnum.TIME_OUT_OF_OPENING_RANGE));
+
         return Optional.empty();
     }
 

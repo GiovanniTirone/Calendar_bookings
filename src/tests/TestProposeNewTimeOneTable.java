@@ -1,31 +1,42 @@
 package tests;
 
-import calendar.newcalendar.OpeningCalendarDay;
+import calendar.booking.StatusBooking;
+import calendar.newcalendar.OpeningCalendarAllDays;
+import calendar.table.Table;
 import restaurant.Client;
 import restaurant.Restaurant;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-public class TestOpeningCalendarDay {
-    /*
+public class TestProposeNewTimeOneTable {
+
     public static void main(String[] args) throws Exception {
 
-        OpeningCalendarDay calendar = OpeningCalendarDay.getInstance();
+        OpeningCalendarAllDays calendar = OpeningCalendarAllDays.getInstance();
         Restaurant restaurant = Restaurant.getInstance();
+        Map <Integer, Table> tables = new HashMap<>();
+        tables.put(1,new Table(4,1));
+        restaurant.setTables(tables);
 
         calendar.activateIntervalFromDate(LocalDate.now(),2);
 
-        calendar.activateOpeningRange(getDateFromNow(1), LocalTime.of(11,00),LocalTime.of(14,00));
+        calendar.activateOpeningRange(getDateFromNow(1), LocalTime.of(10,00),LocalTime.of(15,00));
 
         calendar.bookTable(createClientsList(4),getDateFromNow(1),LocalTime.of(12,00),70);
 
-        calendar.printActivateDays();
+        StatusBooking statusBooking = calendar.bookTable(createClientsList(4),getDateFromNow(1),LocalTime.of(11,00),70);
+
+
+
         calendar.printDetailsOfAllDays();
-        calendar.printAllRanges();
-        restaurant.getTables().get(2).printRanges();
+        calendar.printRangesOfDate(getDateFromNow(1));
+      //  calendar.printAllRanges();
+   //    restaurant.getTables().get(2).printRanges();
+        statusBooking.printDetails();
+        System.out.println(statusBooking.getNewTimeToPropose());
+
     }
 
     private static String [] names = {"Liam" ,	"Olivia" , "Noah" ,	"Emma", "Oliver",	"Charlotte","Elijah"	,"Amelia"
@@ -51,6 +62,6 @@ public class TestOpeningCalendarDay {
         return clientsList;
     }
 
-    */
+
 
 }

@@ -38,7 +38,7 @@ public class OpeningCalendarDay {
     public void activateOpeningRange (LocalTime openingTime, LocalTime closureTime) throws Exception {
         OpeningRange<RangeTimeOfAllTables> newOpeningRange = new OpeningRange<>(RangeTimeOfAllTables.class,openingTime,closureTime);
         RangeTimeOfAllTables totalRange = newOpeningRange.getRangeByTime(openingTime).get();
-        for(Table table : restaurant.getTavoli().values()) {
+        for(Table table : restaurant.getTables().values()) {
             OpeningRange<RangeTimeOfTable> tableOpeningRange = table.setAndGetOpeningRange(new OpeningRange<>(RangeTimeOfTable.class,openingTime,closureTime));
             totalRange.tablesOriginalRangesMap.put(table,tableOpeningRange.getRangeByTime(openingTime).get());
         }
@@ -117,7 +117,7 @@ public class OpeningCalendarDay {
 
     public String getRangesOfOpeningRangeFormatted(OpeningRange<RangeTimeOfAllTables> targetOpeningRange) {
         TreeSet<Table> tables = new TreeSet<>(Comparators.getCompareTablesBySeating());
-        tables.addAll(restaurant.getTavoli().values());
+        tables.addAll(restaurant.getTables().values());
         String mat [][] = new String[tables.size()+1][targetOpeningRange.getSubRangesSet().size()+1];
         mat[0][0] = "RangeTime: ";
         int i=1;

@@ -6,6 +6,7 @@ import utility.Comparators;
 
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class Restaurant {
     private String email;
 
     //al posto di integer potremmo mettere una lista di clienti, con tavolo per chiave ("questo tavolo è occupato da questo gruppo di clienti")
-    private HashMap<Integer, Table> tavoli = new HashMap<>();
+    private Map<Integer, Table> tables = new HashMap<>();
 
     private static Restaurant restaurant = new Restaurant("name","address","545454","mail");
 
@@ -40,13 +41,13 @@ public class Restaurant {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.tavoli = new HashMap<>() {{
-            put(1, new Table(5, 1, true));
-            put(2, new Table(4, 2, true));
-            put(3, new Table(2, 3, true));
-            put(4, new Table(3, 4, true));
-            put(5, new Table(3, 5, true));
-            put(6, new Table(7, 6, true));
+        this.tables = new HashMap<>() {{
+            put(1, new Table(5, 1));
+            put(2, new Table(4, 2));
+            put(3, new Table(2, 3));
+            put(4, new Table(3, 4));
+            put(5, new Table(3, 5));
+            put(6, new Table(7, 6));
         }};
     }
 
@@ -89,12 +90,12 @@ public class Restaurant {
         this.email = email;
     }
 
-    public HashMap<Integer, Table> getTavoli() {
-        return tavoli;
+    public Map<Integer, Table> getTables() {
+        return tables;
     }
 
-    public void setTavoli(HashMap<Integer, Table> tavoli) {
-        this.tavoli = tavoli;
+    public void setTables(Map<Integer, Table> tables) {
+        this.tables = tables;
     }
 
     /**
@@ -106,23 +107,23 @@ public class Restaurant {
 
     //todo quando aggiungo / rimuovo un tavolo devo modificare anche i possibleFreetables nei rangetimes
     public void aggiungiTavolo(Integer numero, Table table){
-        tavoli.put(numero, table);
+        tables.put(numero, table);
     }
 
     public void rimuoviTavolo(Integer numero, Table table) {
-        tavoli.put(numero, table);
+        tables.put(numero, table);
     }
 
     public Table getTavoloByNumber(int numero){
-        return tavoli.get(numero);
+        return tables.get(numero);
     }
 
     public TreeSet<Integer> getTableSizes () {
-        return tavoli.values().stream().map(Table::getNumeroPostiTavolo).collect(Collectors.toCollection(TreeSet::new));
+        return tables.values().stream().map(Table::getNumeroPostiTavolo).collect(Collectors.toCollection(TreeSet::new));
     }
 
     public TreeSet<Table> getFreeTableFromTakenTables (Set<Table>takenTables, int peopleNumber){
-        Set<Table> freeTables = tavoli.values().stream()
+        Set<Table> freeTables = tables.values().stream()
                 .filter(tavolo -> !takenTables.contains(tavolo)).collect(Collectors.toSet());
         return getPossibleTablesFromFreeTables(freeTables,peopleNumber);
     }

@@ -50,6 +50,10 @@ public class OpeningRange<RT extends RangeTime> extends RangeTime<TreeSet<RT>>{
         return subRangesSet.higher(range);
     }
 
+    public RT lower (RT range){
+        return subRangesSet.lower(range);
+    }
+
     public void addRangeTime (RT newRange) throws Exception {
 
         if(!checkRangeInOpeningRange(newRange))
