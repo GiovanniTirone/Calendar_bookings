@@ -77,13 +77,32 @@ public class Table {
 
         Optional<StatusBooking> statusBookingOpt;
 
-        switch()
-        if(targetRange.getStatusTable() == StatusTableEnum.TO_CHECK ||
-                (targetRange.getStatusTable() == StatusTableEnum.BOOKED && time.isBefore(targetRange.getInfoTable().getStartBookingTime().get()))) {
-          statusBookingOpt = checkCompatibilityWithNextBookings(targetRange,time,bookingRange);
-          if(statusBookingOpt.isPresent())
-              return statusBookingOpt.get();
+        switch(targetRange.getStatusTable()){
+            case TO_CHECK -> {
+                statusBookingOpt = checkCompatibilityWithNextBookings(targetRange,time,bookingRange);
+                if(statusBookingOpt.isPresent()) return statusBookingOpt.get();
+            }
+            case BOOKED -> {
+
+                LocalTime nextBookingStartTime = getCeilingRangeTimeWithBooking(targetRange).get().getStartBookingTime().get();
+                LocalTime prevBookingStartTime = getLowerRangeTimeWithBooking(targetRange).get().getStartBookingTime().get();
+
+                long distanceNextBooking = ChronoUnit.MINUTES.between(time,nextBookingStartTime);
+                long distancePrevBooking = ChronoUnit.MINUTES.between(time,prevBookingStartTime);
+
+
+                boolean timeIsBeforeTargetBookingTime = time.isBefore(targetRange.getInfoTable().getStartBookingTime().get());
+                boolean timeIsAfterTargetBookingTime = time.isAfter(targetRange.getInfoTable().getStartBookingTime().get());
+                if( ){  //come to check
+                    statusBookingOpt = checkCompatibilityWithNextBookings(targetRange,time,bookingRange);
+                    if(statusBookingOpt.isPresent()) return statusBookingOpt.get();
+                }
+                else if(){
+
+                }
+            }
         }
+
 
         Booking newBooking = new Booking(clientsList, LocalDateTime.of(date,time),bookingRange,this);
         RangeTimeOfTable newRange = new RangeTimeOfTable(newBooking);
