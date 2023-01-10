@@ -2,7 +2,6 @@ package calendar.table;
 
 import calendar.booking.Booking;
 import calendar.range.RangeTime;
-
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -16,13 +15,21 @@ public class RangeTimeOfTable extends RangeTime<InfoTable> {
         this.infoTable = new InfoTable();
     }
 
+    public RangeTimeOfTable(LocalTime startTime, LocalTime endTime,InfoTable infoTable){
+        super(startTime,endTime);
+        this.infoTable = infoTable;
+    }
+
+
     public RangeTimeOfTable(Booking booking){
-        super(booking.getTime().minusMinutes(60),booking.getTime().plusMinutes(booking.getRangeTime())); //todo mettere min time bookings ->60
+        super(booking.getTime(),booking.getTime().plusMinutes(booking.getRangeTime())); //todo mettere min time bookings ->60
         this.infoTable = new InfoTable();
-        this.infoTable.setStartBookingTime(Optional.of(booking.getTime()));
+     //   this.infoTable.setStartBookingTime(Optional.of(booking.getTime()));
         this.infoTable.setBooking(Optional.of(booking));
         this.infoTable.setStatusTable(StatusTableEnum.BOOKED);
     }
+
+
 
 
     public StatusTableEnum getStatusTable() {
@@ -45,8 +52,16 @@ public class RangeTimeOfTable extends RangeTime<InfoTable> {
         this.infoTable = infoTable;
     }
 
+
+    /*
     public void setStartBookingTime(Optional<LocalTime> startBookingTime) {
         this.infoTable.setStartBookingTime(startBookingTime);
+    }
+    */
+
+    public void setBooked(Booking booking){
+        this.infoTable.setBooking(Optional.of(booking));
+        this.infoTable.setStatusTable(StatusTableEnum.BOOKED);
     }
 
     public Optional<Booking> getBooking() {
@@ -63,6 +78,23 @@ public class RangeTimeOfTable extends RangeTime<InfoTable> {
 
     @Override
     public void overlapDatas(InfoTable newInfo) {  //todo sistemare
+        switch(this.infoTable.getStatusTable()){
+            case BOOKED -> {
+                return;
+            }
+            case TO_CHECK -> {
+                this.infoTable = newInfo;
+            }
+            case BOOKED_NEXT -> {
+                this.infoTable = newInfo;
+            }
+            case FREE -> {
+                this.infoTable = newInfo;
+            }
+        }
+
+
+        /*
         if(this.infoTable.getStatusTable() == StatusTableEnum.BOOKED){
             LocalTime newEndTime = newInfo.getBooking().get().getTime().plusMinutes(newInfo.getBooking().get().getRangeTime());
             if(this.getStartTime().isBefore(newEndTime) && this.getStartBookingTime().get().isAfter(newEndTime)){
@@ -73,6 +105,7 @@ public class RangeTimeOfTable extends RangeTime<InfoTable> {
             }
         }
         this.setInfoTable(newInfo);
+        */
     }
 
     @Override

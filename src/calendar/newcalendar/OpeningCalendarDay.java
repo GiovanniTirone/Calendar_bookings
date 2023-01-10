@@ -132,8 +132,8 @@ public class OpeningCalendarDay {
             for(Table table : tables){
                 StatusTableEnum statusTable =  range.tablesOriginalRangesMap.get(table).getStatusTable();
                 mat[i][j] = statusTable.name();
-                if(statusTable == StatusTableEnum.BOOKED){
-                    mat[i][j] = mat[i][j].substring(0,4) + "-"  + range.tablesOriginalRangesMap.get(table).getInfoTable().getBooking().get().getId();
+                if(statusTable == StatusTableEnum.BOOKED || statusTable==StatusTableEnum.BOOKED_NEXT){
+                    mat[i][j] = mat[i][j] + "-"  + range.tablesOriginalRangesMap.get(table).getInfoTable().getBooking().get().getId(); //mat[i][j].substring(0.4)
                 }
                 i++;
             }

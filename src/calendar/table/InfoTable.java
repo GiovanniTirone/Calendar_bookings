@@ -1,15 +1,13 @@
 package calendar.table;
 
 
-
 import calendar.booking.Booking;
-
 import java.time.LocalTime;
 import java.util.Optional;
 
 public class InfoTable {
 
-    private Optional<LocalTime> startBookingTime;
+    //private Optional<LocalTime> startBookingTime;
 
     private Optional<Booking> booking;
 
@@ -17,17 +15,20 @@ public class InfoTable {
 
     public InfoTable () {
         this.statusTable = StatusTableEnum.FREE;
-        this.startBookingTime = Optional.empty();
+       // this.startBookingTime = Optional.empty();
         this.booking = Optional.empty();
     }
 
     public Optional<LocalTime> getStartBookingTime() {
-        return startBookingTime;
+        return this.booking.map(Booking::getTime);
     }
 
+    /*
     public void setStartBookingTime(Optional<LocalTime> startBookingTime) {
         this.startBookingTime = startBookingTime;
     }
+    */
+
 
     public Optional<Booking> getBooking() {
         return booking;
@@ -48,16 +49,17 @@ public class InfoTable {
     public InfoTable clone () {
         InfoTable copy = new InfoTable();
         copy.statusTable = this.statusTable;
-        copy.startBookingTime = this.startBookingTime.isPresent() ?
+        /*copy.startBookingTime = this.startBookingTime.isPresent() ?
                 Optional.of(LocalTime.of(this.startBookingTime.get().getHour(),this.startBookingTime.get().getMinute())) :
-                Optional.empty();
+                Optional.empty();*/
         copy.booking = this.booking.isPresent() ? Optional.of(booking.get()) : Optional.empty();
         return copy;
     }
 
     public String getInfoString () {
         String str = "";
-        str += "Status: " + statusTable.name() + " - Booking: " + booking.isPresent() + " - StartBookingTime: " + startBookingTime;
+        String startBookingTimeStr = getStartBookingTime().isPresent() ? getStartBookingTime().get().toString() : "";
+        str += "Status: " + statusTable.name() + " - Booking: " + booking.isPresent() + " - StartBookingTime: " + startBookingTimeStr;
         return str;
     }
 

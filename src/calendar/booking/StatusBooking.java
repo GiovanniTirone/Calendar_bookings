@@ -14,7 +14,9 @@ public class StatusBooking {
 
     private Optional<Booking> successfulBooking;
 
-    private Optional<RangeTimeOfTable> rangeTimeOfBooking;
+   // private Optional<RangeTimeOfTable> rangeTimeOfBooking;
+
+  //  private Optional<RangeTimeOfTable> range_BOOKED_NEXT;
 
     public StatusBooking (boolean success, InfoBookingEnum info){
         this.success = success;
@@ -28,16 +30,17 @@ public class StatusBooking {
         this.info = info;
         this.successfulBooking = Optional.empty();
         this.newTimeToPropose = Optional.of(newTimeToPropose);
-        this.rangeTimeOfBooking = Optional.empty();
+     //   this.rangeTimeOfBooking = Optional.empty();
     }
 
 
-    public StatusBooking (boolean success, InfoBookingEnum info,Booking booking,RangeTimeOfTable rangeTimeOfTable){
+    public StatusBooking (boolean success, InfoBookingEnum info,Booking booking){
         this.success = success;
         this.info = info;
         this.successfulBooking = Optional.of(booking);
         this.newTimeToPropose = Optional.empty();
-        this.rangeTimeOfBooking = Optional.of(rangeTimeOfTable);
+   //     this.rangeTimeOfBooking = Optional.of(rangeTimeOfTable);
+    //    this.range_BOOKED_NEXT = Optional.of(range_BOOKED_NEXT);
     }
 
     public boolean isSuccess() {
@@ -72,13 +75,22 @@ public class StatusBooking {
         this.successfulBooking = successfulBooking;
     }
 
+    /*
     public Optional<RangeTimeOfTable> getRangeTimeOfBooking() {
         return rangeTimeOfBooking;
     }
 
+
+
     public void setRangeTimeOfBooking(Optional<RangeTimeOfTable> rangeTimeOfBooking) {
         this.rangeTimeOfBooking = rangeTimeOfBooking;
     }
+
+    public Optional<RangeTimeOfTable> getRange_BOOKED_NEXT() {
+        return range_BOOKED_NEXT;
+    }
+
+     */
 
     public void printDetails () {
         if(success) {
